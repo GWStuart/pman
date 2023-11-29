@@ -30,7 +30,7 @@ def get_key():
     key_file = os.path.dirname(__file__) + "/key"
     if os.path.exists(key_file):
         with open(key_file, "r") as f:
-            return f.readlines()[0]
+            return f.readlines()[0].strip()
 
 def generate_password(name, length=0, exclude=False, confirm=False):
     key = get_key()
