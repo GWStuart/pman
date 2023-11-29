@@ -26,9 +26,17 @@ def extract_name(url):
     
     return url
 
-def generate_password(name, length=0, exclude=False):
+def generate_password(name, length=0, exclude=False, confirm=False):
     passwd = getpass.getpass("Master Password: ")  # Might be security risks with storing this in memory
     encrypted_passwd = int(sha256(f"{passwd + name}".encode("utf-8")).hexdigest(), 16)
+
+    if confirm: # if the user wishes to confirm their password
+        confirm_passwd = getpass.getpass("Confirm Password: ")
+        encrypted_confirm = int(sha256(f"{confirm_passwd + name}".encode("utf-8")).hexdigest(), 16)
+
+        if encrypted_confirm != encrypted_passwd:
+            print("Passwords do not match")
+            quit()
 
     characters = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()<>[]{}+=-_"
     if exclude:

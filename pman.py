@@ -19,6 +19,7 @@ parser.add_argument("-db", "-data", "--database", action="store_true", help="ope
 parser.add_argument("-rm", "-r", "-del", "--remove", help="remove stored credentials")
 parser.add_argument("-n", "-len", "--length", help="specify password length")
 parser.add_argument("-x", "--exclude", help="exclude special characters")
+parser.add_argument("-c", "--confirm", action="store_true", help="ask to confirm password")
 # command to edit/update values in db
 # add a -a command to append text to name
 
@@ -33,7 +34,7 @@ if args.get:
         args.length, args.exclude = flags
     length = int(args.length) if args.length else 0
 
-    password = generate_password(name, length=length, exclude=args.exclude)
+    password = generate_password(name, length=length, exclude=args.exclude, confirm=args.confirm)
     print(f"Password: {password}")
 
     if args.user:
