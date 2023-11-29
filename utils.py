@@ -5,6 +5,9 @@ import platform
 from hashlib import sha256
 
 data_file = os.path.dirname(__file__) + "/data.txt"
+if not os.path.exists(data_file):
+    with open(data_file, "w") as f:
+        f.write("Saved user data for pman\n")
 
 def extract_name(url):
     url = url.replace("https://", "")
