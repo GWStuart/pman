@@ -1,8 +1,8 @@
 # Pman
 
-**Pman** is a CLI password manager written in Python. It is intended to be used through the command line and also has a web version available running on my github [https://gwstuart.github.io/projects.html|here].
+**Pman** is a CLI password manager written in Python. It is intended to be used through the command line and also has a web version available running on my github [here](https://gwstuart.github.io/projects.html).
 
-Would highly recommend first reading how Pman works in the [[About]] section
+Would highly recommend first reading how Pman works in the [About](#about) section
 
 ## Table of Contents
 
@@ -13,10 +13,21 @@ Would highly recommend first reading how Pman works in the [[About]] section
 
 ## About
 
-This section is going to talk about Pman and how it works.
-Essentially Pman is a stateless password manager...
+This section is going to discuss Pman and how it works.
+Essentially Pman is a stateless password manager... (go into detail later)
 
 ## Installation
+
+clone this repository with `git clone https://github.com/GWStuart/pman.git`
+You will also need to have python3 installed on your system.
+
+I would recommend setting an alias so that pman can be run more easily.
+
+For Linux:
+- edit your `~/.bashrc` file and add the line `alias pman="python path_to_pman"`
+
+For Windows:
+- will fill this in later
 
 ## Usage
 
