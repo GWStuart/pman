@@ -14,7 +14,7 @@ Would highly recommend first reading how Pman works in the [About](#about) secti
 ## About
 
 This section is going to discuss Pman and how it works.
-Essentially Pman is a stateless password manager... (go into detail later)
+Essentially pman is a stateless password manager... (go into detail later)
 
 ## Installation
 
@@ -28,6 +28,15 @@ For Linux:
 
 For Windows:
 - will fill this in later
+
+### Dependancies
+Pman is built using python3 and requires it to be installed on your system. 
+
+The project also uses the python package `argon2-cffi` which can be installed with the command,
+```
+pip install argon2-cffi
+```
+Or through your distribution's package manager if you are on linux. 
 
 ## Usage
 
