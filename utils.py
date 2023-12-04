@@ -35,15 +35,17 @@ def get_key():
         with open(key_file, "r") as f:
             return f.readlines()[0].strip()
 
+def get_password(name, key, message):  # Prompts user for a master password and returns hashed password
+    passwd = getpass.getpass(message)  # Might be security risks with storing this in memory
+    return int(sha256(f"{passwd + name + key}".encode("utf-8")).hexdigest(), 16)
+
 def generate_password(name, length=0, exclude=False, confirm=False):
     key = get_key()
 
-    passwd = getpass.getpass("Master Password: ")  # Might be security risks with storing this in memory
-    encrypted_passwd = int(sha256(f"{passwd + name + key}".encode("utf-8")).hexdigest(), 16)
+    encrypted_passwd = get_password(name, key, "Master Password: ")
 
     if confirm: # if the user wishes to confirm their password
-        confirm_passwd = getpass.getpass("Confirm Password: ")
-        encrypted_confirm = int(sha256(f"{confirm_passwd + name + key}".encode("utf-8")).hexdigest(), 16)
+        encrypted_confirm = get_password(name, key, "Confirm Password: ")
 
         if encrypted_confirm != encrypted_passwd:
             print("Passwords do not match")
