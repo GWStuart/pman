@@ -20,6 +20,7 @@ parser.add_argument("-rm", "-r", "-del", "--remove", help="remove stored credent
 parser.add_argument("-n", "-len", "--length", help="specify password length")
 parser.add_argument("-x", "--exclude", help="exclude special characters")
 parser.add_argument("-c", "--confirm", action="store_true", help="ask to confirm password")
+parser.add_argument("--legacy", action="store_true", help="advanced only. Allows use of legacy hashing function")
 # command to edit/update values in db
 # add a -a command to append text to name
 
@@ -34,7 +35,7 @@ if args.get:
         args.length, args.exclude = flags
     length = int(args.length) if args.length else 0
 
-    password = generate_password(name, length=length, exclude=args.exclude, confirm=args.confirm)
+    password = generate_password(name, length=length, exclude=args.exclude, confirm=args.confirm, legacy=args.legacy)
     print(f"Password: {password}")
 
     if args.user:

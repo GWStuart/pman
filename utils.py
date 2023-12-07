@@ -3,6 +3,7 @@ import os
 import random
 import platform
 from hashlib import sha256
+from argon2 import PasswordHasher
 
 data_file = os.path.dirname(__file__) + "/data.txt"
 if not os.path.exists(data_file):
@@ -35,17 +36,25 @@ def get_key():
         with open(key_file, "r") as f:
             return f.readlines()[0].strip()
 
-def get_password(name, key, message):  # Prompts user for a master password and returns hashed password
+def get_password(name, key, message, legacy=False):  # Prompts user for a master password and returns hashed password
     passwd = getpass.getpass(message)  # Might be security risks with storing this in memory
-    return int(sha256(f"{passwd + name + key}".encode("utf-8")).hexdigest(), 16)
+    
+    if legacy:
+        return int(sha256(f"{passwd + name + key}".encode("utf-8")).hexdigest(), 16)
+    else:
+        hasher = PasswordHasher(salt_len=2)
+        hashed = hasher.hash(passwd + name + key, salt=b"pmanPman")  # maybe could do something clever with the salt
+        result = hashed.split("$")[-1]
 
-def generate_password(name, length=0, exclude=False, confirm=False):
+        return int.from_bytes(result.encode())
+
+def generate_password(name, length=0, exclude=False, confirm=False, legacy=False):
     key = get_key()
 
-    encrypted_passwd = get_password(name, key, "Master Password: ")
+    encrypted_passwd = get_password(name, key, "Master Password: ", legacy=legacy)
 
     if confirm: # if the user wishes to confirm their password
-        encrypted_confirm = get_password(name, key, "Confirm Password: ")
+        encrypted_confirm = get_password(name, key, "Confirm Password: ", legacy=legacy)
 
         if encrypted_confirm != encrypted_passwd:
             print("Passwords do not match")
