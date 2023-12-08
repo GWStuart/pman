@@ -36,6 +36,17 @@ def get_key():
         with open(key_file, "r") as f:
             return f.readlines()[0].strip()
 
+def base10(text):  # converts argon hash (base 64) to a base 10 integer
+    characters = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ+/"
+    base = 64
+    text_length = len(text)
+
+    result = 0
+    for i, character in enumerate(text):
+        result += characters.index(character) * (base ** (text_length - i - 1))
+
+    return result
+
 def get_password(name, key, message, legacy=False):  # Prompts user for a master password and returns hashed password
     passwd = getpass.getpass(message)  # Might be security risks with storing this in memory
     
@@ -46,7 +57,7 @@ def get_password(name, key, message, legacy=False):  # Prompts user for a master
         hashed = hasher.hash(passwd + name + key, salt=b"pmanPman")  # maybe could do something clever with the salt
         result = hashed.split("$")[-1]
 
-        return int.from_bytes(result.encode())
+        return base10(result)
 
 def generate_password(name, length=0, exclude=False, confirm=False, legacy=False):
     key = get_key()
@@ -61,11 +72,11 @@ def generate_password(name, length=0, exclude=False, confirm=False, legacy=False
             quit()
 
     characters = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()<>[]{}+=-_"
+    base = len(characters)
+
     if exclude:
         for x in exclude:
             characters = characters.replace(x, "")
-
-    base = len(characters)
 
     new = ""
     while encrypted_passwd != 0:
