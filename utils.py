@@ -5,12 +5,12 @@ import platform
 from hashlib import sha256
 from argon2 import PasswordHasher
 
-data_file = os.path.dirname(__file__) + "/data.txt"
-if not os.path.exists(data_file):
+data_file = os.path.dirname(__file__) + "/data.txt"  # location of pman data file
+if not os.path.exists(data_file):  # check if the file exists if not create it
     with open(data_file, "w") as f:
         f.write("Saved user data for pman\n")
 
-def extract_name(url):
+def extract_name(url):  # extracts the website name from a url
     url = url.replace("https://", "")
     url = url.replace("http://", "")
 
@@ -28,13 +28,13 @@ def extract_name(url):
         dot = url.index(".")
         url = url[:dot]
     
-    return url
+    return url  # returns the extracted website name as a string
 
-def get_key():
+def get_key():  # gets the user key from the key file (if it exists)
     key_file = os.path.dirname(__file__) + "/key"
     if os.path.exists(key_file):
         with open(key_file, "r") as f:
-            return f.readlines()[0].strip()
+            return f.readlines()[0].strip()  # returns the key as a string
 
 def base10(text):  # converts argon hash (base 64) to a base 10 integer
     characters = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ+/"
@@ -45,10 +45,10 @@ def base10(text):  # converts argon hash (base 64) to a base 10 integer
     for i, character in enumerate(text):
         result += characters.index(character) * (base ** (text_length - i - 1))
 
-    return result
+    return result  # returns the text as an integer
 
-def get_password(name, key, message, legacy=False):  # Prompts user for a master password and returns hashed password
-    passwd = getpass.getpass(message)  # Might be security risks with storing this in memory
+def get_password(name, key, message, legacy=False):  # prompts user for a master password and returns hashed password
+    passwd = getpass.getpass(message)  # might be security risks with storing this in memory
     
     if legacy:
         return int(sha256(f"{passwd + name + key}".encode("utf-8")).hexdigest(), 16)
@@ -57,10 +57,10 @@ def get_password(name, key, message, legacy=False):  # Prompts user for a master
         hashed = hasher.hash(passwd + name + key, salt=b"pmanPman")  # maybe could do something clever with the salt
         result = hashed.split("$")[-1]
 
-        return base10(result)
+        return base10(result)  # returns the hashed password as an integer
 
 def generate_password(name, length=0, exclude=False, confirm=False, legacy=False):
-    key = get_key()
+    key = get_key()  # user chosen key
 
     encrypted_passwd = get_password(name, key, "Master Password: ", legacy=legacy)
 
@@ -74,21 +74,22 @@ def generate_password(name, length=0, exclude=False, confirm=False, legacy=False
     characters = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()<>[]{}+=-_"
     base = len(characters)
 
-    if exclude:
+    if exclude:  # exclude certain characters specified by user
         for x in exclude:
             characters = characters.replace(x, "")
 
-    new = ""
+    new = ""  # convert the integer hash into a multicharacter string
     while encrypted_passwd != 0:
         new = characters[encrypted_passwd % base] + new
         encrypted_passwd //= base
     
-    if length:
+    if length:  # shorten the password length if specified by the user
         new = new[:length]
 
-    return new
+    return new  # return the password as a string
 
-def generate_username(name): # Could be improved in future
+def generate_username(name): # randomaly generates a username
+    # this function could be improved in future
     random.seed(sum([ord(x) for x in name]))
 
     prefixes = ["", "Mr", "Mrs"]
@@ -97,24 +98,27 @@ def generate_username(name): # Could be improved in future
     number = str(random.randint(0, 99))
 
     username = random.choice(prefixes) + random.choice(noun) + random.choice(adjective) + number
-    return username
+    return username  # returns the random username as a string
 
-def query(name):
+def query(name):  # query the pman data file for a given application name
     with open(data_file, "r") as f:
         lines = f.readlines()[1:]
         for line in lines:
             if name.lower() == line.strip().split("~~~")[0].lower():
+                # returns the line number and full information of the match
                 return lines.index(line), line.strip().split("~~~")
-    return False
+    return False  # returns false if no match was found
 
-def save_data(name, length, exclude, username):
-    if query(name):
+def save_data(name, length, exclude, username):  # save data in the database
+    if query(name):  # check if data is already present
         print("A password was already found in the database")
-        if input("Would you like to procede (y/N): ") != "y": quit()
+        if input("Would you like to procede (y/N): ") != "y": 
+            quit()
 
     print("Optionally provide additional information to be saved")
 
-    if username:
+    # review this username saving section
+    if username:  # prompt the user to optionally save a username
         save = input("Save username (Y/n): ")
         if save == "n":
             username = ""
@@ -125,7 +129,7 @@ def save_data(name, length, exclude, username):
     
     description = input("Description: ")
     
-    with open(data_file, "a") as f:
+    with open(data_file, "a") as f:  # write data to the data file
         f.write(f"{name}~~~{username}~~~{description}~~~")
         if length or exclude:
             f.write(f"{length}:{exclude}")
@@ -133,7 +137,7 @@ def save_data(name, length, exclude, username):
 
     print("Saved user credentials")
 
-def fetch_username(name):
+def fetch_username(name):  # fetch username associated with a saved name
     result = query(name)
     if not result: return
 
@@ -142,7 +146,7 @@ def fetch_username(name):
     if result[1][2]:
         print(f"Description: {result[1][2]}")
 
-def list_db():
+def list_db():  # lists all data present in the data file
     headings = ["Name", "Username", "Description", "Flags"]
     with open(data_file, "r") as f:
         lines = f.readlines()[1:]
@@ -160,7 +164,7 @@ def list_db():
     for line in data:
         print(string.format(*line))
 
-def open_db():
+def open_db():  # opens the data file using preferred text editor
     os_type = platform.system()
 
     print(f"Opening: {data_file}")
@@ -169,10 +173,10 @@ def open_db():
         os.system(f"start {data_file}")
     elif os_type == "Linux":
         os.system(f"$EDITOR {data_file}") 
-    else:
+    else:  # still need to add support for macos (probably same as linux)
         print(f"Sorry is {os_type} is unsupported")
 
-def remove(name):
+def remove(name):  # remove item with given name from the data file
     result = query(name)
     if result:
         [print(f"\033[1m{x}\033[0m: {y}") for x, y in zip(["Name", "Username", "Description"], result[1])]
@@ -190,7 +194,9 @@ def remove(name):
     else:
         print(f'Sorry "{name}" was not found in the database')
 
-def extract_flags(name):
+def extract_flags(name):  # extract the flags associated with a given name from the data file
+    # change this to use the query() function
+    # todo 
     with open(data_file, "r") as f:
         lines = f.readlines()[1:]
         for line in lines:

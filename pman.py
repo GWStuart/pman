@@ -22,7 +22,6 @@ parser.add_argument("-x", "--exclude", help="exclude special characters")
 parser.add_argument("-c", "--confirm", action="store_true", help="ask to confirm password")
 parser.add_argument("--legacy", action="store_true", help="advanced only. Allows use of legacy hashing function")
 # command to edit/update values in db
-# add a -a command to append text to name
 
 args = parser.parse_args()
 
@@ -46,6 +45,7 @@ if args.get:
         save_data(name, length, args.exclude, args.user)
     
     if not args.save and not args.user: # prints user data if found in database
+        # don't really remeber what this does tbh
         fetch_username(name)
 
 if args.list:
