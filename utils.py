@@ -53,7 +53,7 @@ def get_password(name, key, message, legacy=False):  # Prompts user for a master
     if legacy:
         return int(sha256(f"{passwd + name + key}".encode("utf-8")).hexdigest(), 16)
     else:
-        hasher = PasswordHasher(salt_len=2)
+        hasher = PasswordHasher(time_cost=4, memory_cost=1048576, parallelism=6, hash_len=32, salt_len=2)
         hashed = hasher.hash(passwd + name + key, salt=b"pmanPman")  # maybe could do something clever with the salt
         result = hashed.split("$")[-1]
 
