@@ -35,6 +35,7 @@ def get_key():  # gets the user key from the key file (if it exists)
     if os.path.exists(key_file):
         with open(key_file, "r") as f:
             return f.readlines()[0].strip()  # returns the key as a string
+    return ""
 
 def base10(text):  # converts argon hash (base 64) to a base 10 integer
     characters = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ+/"
@@ -195,16 +196,9 @@ def remove(name):  # remove item with given name from the data file
         print(f'Sorry "{name}" was not found in the database')
 
 def extract_flags(name):  # extract the flags associated with a given name from the data file
-    # change this to use the query() function
-    # todo 
-    with open(data_file, "r") as f:
-        lines = f.readlines()[1:]
-        for line in lines:
-            if name.lower() == line.strip().split("~~~")[0].lower(): # might be able to use query() here idk
-                flags = line.strip().split("~~~")[3]
-                if flags:
-                    return flags.split(":")
-                else:
-                    return False
-
+    entry = query(name)
+    if entry:
+        flags = query(name)[1][-1].split(":")
+        if flags != [""]:
+            return flags
     return False
