@@ -1,6 +1,8 @@
 # Pman
 
-**Pman** is a CLI password manager written in Python. It is intended to be used through the command line and also has a web version available running on my github [here](https://gwstuart.github.io/projects.html).
+**Pman** is a CLI password manager written in Python. It is intended to be used through the command line however a web version is also being developed.
+
+Development of pman is currently on hold however may be resumed when I have more time.
 
 Would highly recommend first reading how Pman works in the [About](#about) section
 
@@ -13,8 +15,9 @@ Would highly recommend first reading how Pman works in the [About](#about) secti
 
 ## About
 
-This section is going to discuss Pman and how it works.
-Essentially pman is a stateless password manager... (go into detail later)
+Pman is a statless password manager which means that it doesn't story any passwords in a database but calcculates the password when required using known information such as the application name and master password.
+
+For an indepth ovewview of how Pman functions see the wiki page.
 
 ## Installation
 
@@ -26,9 +29,6 @@ I would recommend setting an alias so that pman can be run more easily.
 For Linux:
 - edit your `~/.bashrc` file and add the line `alias pman="python path_to_pman"`
 
-For Windows:
-- will fill this in later
-
 ### Dependancies
 Pman is built using python3 and requires it to be installed on your system. 
 
@@ -39,6 +39,8 @@ pip install argon2-cffi
 Or through your distribution's package manager if you are on linux. 
 
 ## Usage
+
+The CLI for pman is relatively easy to use and is briefly explained below. For more information on all the available commands run `pman --help`. 
 
 ### Basic Usage
 
@@ -83,7 +85,7 @@ pman -x !@#
 
 ### Usage Tips
 
-If you need to type certain characters into the bash terminal such as, !@#, put them in single brackets
+If you need to type certain characters into the bash terminal such as, !@#, put them in single brackets to avoid them being interpreted as terminal actions.
 
 ## License
 
