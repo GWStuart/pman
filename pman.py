@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 from argparse import ArgumentParser, RawDescriptionHelpFormatter
 from sys import argv
 from utils import *
