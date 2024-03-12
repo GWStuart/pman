@@ -1,16 +1,17 @@
-import getpass
-import os
-import random
-import platform
+from getpass import getpass
+from os import path, system  
+from random import seed, randint, choice
+from platform import system as platform_system
 from hashlib import sha256
 from argon2 import PasswordHasher
 
-data_file = os.path.dirname(__file__) + "/data.txt"  # location of pman data file
-if not os.path.exists(data_file):  # check if the file exists if not create it
+data_file = path.dirname(__file__) + "/data.txt"  # location of pman data file
+if not path.exists(data_file):  # check if the file exists if not create it
     with open(data_file, "w") as f:
         f.write("Saved user data for pman\n")
 
-def extract_name(url):  # extracts the website name from a url
+def extract_name(url: str) -> str:
+    """ Extracts the website name from a url """
     url = url.replace("https://", "")
     url = url.replace("http://", "")
 
@@ -30,14 +31,16 @@ def extract_name(url):  # extracts the website name from a url
     
     return url  # returns the extracted website name as a string
 
-def get_key():  # gets the user key from the key file (if it exists)
-    key_file = os.path.dirname(__file__) + "/key"
-    if os.path.exists(key_file):
+def get_key() -> str:
+    """ Returns the user key from the key file (if it exists) """
+
+    key_file = path.dirname(__file__) + "/key"
+    if path.exists(key_file):
         with open(key_file, "r") as f:
             return f.readlines()[0].strip()  # returns the key as a string
     return ""
 
-def base10(text):  # converts argon hash (base 64) to a base 10 integer
+def base10(text) -> int:  # converts argon hash (base 64) to a base 10 integer
     characters = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ+/"
     base = 64
     text_length = len(text)
@@ -48,8 +51,9 @@ def base10(text):  # converts argon hash (base 64) to a base 10 integer
 
     return result  # returns the text as an integer
 
-def get_password(name, key, message, legacy=False):  # prompts user for a master password and returns hashed password
-    passwd = getpass.getpass(message)  # might be security risks with storing this in memory
+def get_password(name, key, message, legacy=False) -> int:
+    """ Prompts user for a master password and returns hashed password"""
+    passwd = getpass(message)  # might be security risks with storing this in memory
     
     if legacy:
         return int(sha256(f"{passwd + name + key}".encode("utf-8")).hexdigest(), 16)
@@ -60,7 +64,8 @@ def get_password(name, key, message, legacy=False):  # prompts user for a master
 
         return base10(result)  # returns the hashed password as an integer
 
-def generate_password(name, length=0, exclude=False, confirm=False, legacy=False):
+def generate_password(name, length=0, exclude=False, confirm=False, legacy=False) -> str:
+    """  """
     key = get_key()  # user chosen key
 
     encrypted_passwd = get_password(name, key, "Master Password: ", legacy=legacy)
@@ -91,14 +96,14 @@ def generate_password(name, length=0, exclude=False, confirm=False, legacy=False
 
 def generate_username(name): # randomaly generates a username
     # this function could be improved in future
-    random.seed(sum([ord(x) for x in name]))
+    seed(sum([ord(x) for x in name]))
 
     prefixes = ["", "Mr", "Mrs"]
     noun = ["Cookie", "Pizza", "Penguin", "Flower", "Camel"]
     adjective = ["Muncher", "Destroyer", "Machine", "Killer"]
-    number = str(random.randint(0, 99))
+    number = str(randint(0, 99))
 
-    username = random.choice(prefixes) + random.choice(noun) + random.choice(adjective) + number
+    username = choice(prefixes) + choice(noun) + choice(adjective) + number
     return username  # returns the random username as a string
 
 def query(name):  # query the pman data file for a given application name
@@ -166,14 +171,14 @@ def list_db():  # lists all data present in the data file
         print(string.format(*line))
 
 def open_db():  # opens the data file using preferred text editor
-    os_type = platform.system()
+    os_type = platform_system()
 
     print(f"Opening: {data_file}")
 
     if os_type == "Windows":
-        os.system(f"start {data_file}")
+        system(f"start {data_file}")
     elif os_type == "Linux":
-        os.system(f"$EDITOR {data_file}") 
+        system(f"$EDITOR {data_file}") 
     else:  # still need to add support for macos (probably same as linux)
         print(f"Sorry is {os_type} is unsupported")
 
