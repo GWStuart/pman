@@ -1,10 +1,7 @@
 # Pman
 
-**Pman** is a CLI password manager written in Python. It is intended to be used through the command line however a web version is also being developed.
-
-Development of pman is currently on hold however may be resumed when I have more time.
-
-Would highly recommend first reading how Pman works in the [About](#about) section
+**Pman** is a CLI password manager written in Python. It is intended to be used through the command line however a web version is also in development.
+Read about how Pman works in the [About](#about) section
 
 ## Table of Contents
 
@@ -15,32 +12,38 @@ Would highly recommend first reading how Pman works in the [About](#about) secti
 
 ## About
 
-Pman is a statless password manager which means that it doesn't story any passwords in a database but calcculates the password when required using known information such as the application name and master password.
+Pman is a statless password manager which means that it doesn't store any passwords in a database but calculates the password when required using known information such as the application name and master password.
 
 For an indepth ovewview of how Pman functions see the wiki page.
 
 ## Installation
+Ensure you have `git` and `python3` installed on your system.
+Clone this repository with `git clone https://github.com/GWStuart/pman.git`
 
-clone this repository with `git clone https://github.com/GWStuart/pman.git`
-You will also need to have python3 installed on your system.
+Pman has a few dependencies that must be installed.
+These can be installed system-wide or using a virtual environemnt.
+
+To create a python virtual environment on linux:
+- navigate to the pman folder
+- create a new virtual environment with `python -m venv venv`
+- activate the environment with `source venv/bin/activate`
+- install dependencies with `python -m pip install -r requirements.txt`
+- run the program using `python pman.py`
+- deactivate the environment with `deactivate` when you have finished
 
 I would recommend setting an alias so that pman can be run more easily.
+Note that if the dependencies are installed in a virtual environment then you need to provide the path to the python executable within the `venv` folder and not your system's python.
 
-For Linux:
-- edit your `~/.bashrc` file and add the line `alias pman="python path_to_pman"`
+For Bash:
+- edit your `~/.bashrc` file and add the line `alias pman="-path-to-pman/venv/bin/python -path-to-pman/pman.py"`
+- reload your bashrc with `source ~/.bashrc`
 
-### Dependancies
-Pman is built using python3 and requires it to be installed on your system. 
-
-The project also uses the python package `argon2-cffi` which can be installed with the command,
-```
-pip install argon2-cffi
-```
-Or through your distribution's package manager if you are on linux. 
+The rest of this 
 
 ## Usage
 
-The CLI for pman is relatively easy to use and is briefly explained below. For more information on all the available commands run `pman --help`. 
+The CLI for pman is relatively easy to use and is explained below. 
+For more information on all the available commands run `pman --help`. 
 
 ### Basic Usage
 
@@ -71,7 +74,7 @@ pman -l
 
 ### Modifying the Password
 
-Sometimes you may need to modify the outputted password to meet the requirements of a particular website/application. This can be easily achieved with flags. Pman support two different modified flags, one for modifying the length of the password and the other for modifying the accepted characters.
+Sometimes you may need to modify the outputted password to meet the requirements of a particular website/application. This can be easily achieved with **flags**. Pman support two different modifier flags, one for modifying the length of the password and the other for modifying the accepted characters.
 
 To modify the length use the `-n` flag. The following command restricts the password to 16 characters
 ```
