@@ -1,4 +1,4 @@
-# Pman
+# pman - Password Manager
 
 **Pman** is a CLI password manager written in Python. It is intended to be used through the command line however a web version is also in development.
 Read about how Pman works in the [About](#about) section
